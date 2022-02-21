@@ -1,0 +1,1 @@
+export { IconButtonComponent as IconButton } from './component';

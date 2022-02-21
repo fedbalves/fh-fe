@@ -1,0 +1,1 @@
+export { SvgComponent as Svg } from './component';
