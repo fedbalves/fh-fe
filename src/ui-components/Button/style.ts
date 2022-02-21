@@ -29,6 +29,11 @@ export const ButtonStyleAuxiliary = styled.button`
     span {
         color: #0071F3;
     }
+
+    &:disabled {
+        background-color: #E7E7E7;
+        border: 1px solid #CCC;
+    }
 `;
 
 export const ButtonStyleCTA = styled.button`

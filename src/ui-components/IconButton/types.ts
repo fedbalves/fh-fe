@@ -6,4 +6,5 @@ export interface IIconButton {
     icon: ISVGProps;
     variant?: TIconButtonVariant;
     onClick?: React.MouseEventHandler<HTMLButtonElement>;
+    disabled?: 'disabled';
 }

@@ -13,12 +13,13 @@ import { IconRemoveProps } from '../../assets/icons/content/remove.svg';
 import { IconClearProps } from '../../assets/icons/content/clear.svg';
 
 import { IAssessmentDom } from './types';
+import { appProps } from '../App/props';
 
 const AssessmentDomItemComponent = (args: IAssessmentDom & any) => {
     const { type = 'adult', roomID, addOccupant, removeOccupant, GuestPicker, setOccupantAge } = args;
     const label = type === 'children' ? 'Children' : 'Adults';
 
-    const dropdownOptions = ['Age', ...Array(8).fill(null).map((_, idx) => idx + 1)];
+    const dropdownOptions = ['Age', ...Array(17).fill(null).map((_, idx) => String(idx))];
 
     const ChildrenItem = () => {
         return (
@@ -49,6 +50,24 @@ const AssessmentDomItemComponent = (args: IAssessmentDom & any) => {
             room.adults;
     }
 
+    const checkOccupantLimits = ({ action, type, ID }: { action: 'add' | 'sub', type: IAssessmentDom['type'], ID: string }): boolean => {
+        const room = GuestPicker.items[ID];
+        const { occupancy, children, adults } = appProps.limits;
+        const totalAdults = room.adults;
+        const totalChildren = room.children.length;
+
+        switch (true) {
+            case totalAdults === adults.max && type === 'adult' && action === 'add':
+            case totalChildren === children.max && type === 'children' && action === 'add':
+            case totalAdults === adults.min && type === 'adult' && action === 'sub':
+            case totalChildren === children.min && type === 'children' && action === 'sub':
+            case (totalAdults + totalChildren) === occupancy.max && action === 'add':
+                return true;
+            default:
+                return false;
+        }
+    }
+
     return (
         <Flex gap={8}>
             <Flex flexDirection="row" justifyContent="space-between" padding="8px 0">
@@ -56,6 +75,7 @@ const AssessmentDomItemComponent = (args: IAssessmentDom & any) => {
                 <Flex flexDirection="row" justifyContent="space-evenly">
                     <IconButton
                         icon={IconRemoveProps}
+                        disabled={checkOccupantLimits({ action: 'sub', type, ID: roomID }) ? 'disabled' : undefined}
                         onClick={() => removeOccupant({ id: roomID, type })} />
                     <Flex width="60px" justifyContent="center">
                         <Text
@@ -64,7 +84,8 @@ const AssessmentDomItemComponent = (args: IAssessmentDom & any) => {
                             text={String(itemCounter())}
                         />
                     </Flex>
-                    <IconButton
+                    <IconButton  
+                        disabled={checkOccupantLimits({ action: 'add', type, ID: roomID }) ? 'disabled' : undefined}
                         icon={IconAddProps}
                         onClick={() => addOccupant({ id: roomID, type })} />
                 </Flex>

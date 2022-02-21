@@ -33,7 +33,7 @@ export const DropdownComponent = ({ options, onSelect, selected }: IDropdown) =>
     return (
         <Flex alignItems="center">
             <DropdownHeaderStyle onClick={toggleDropdown}>
-                <Text text={selectedOption || 'Age'} />
+                <Text text={selectedOption === undefined ? 'Age' : String(selectedOption)} />
                 <Svg {...dropdownIconProps} />
             </DropdownHeaderStyle>
             {isOpen && (

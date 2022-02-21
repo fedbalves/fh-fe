@@ -9,4 +9,5 @@ export interface IButton {
     color?: string;
     icon?: ISVGProps;
     onClick?: React.MouseEventHandler<HTMLButtonElement>;
+    disabled?: 'disabled';
 }

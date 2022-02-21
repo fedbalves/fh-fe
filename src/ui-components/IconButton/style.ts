@@ -1,6 +1,8 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 
+import { IIconButton } from './types';
+
 const IconButtonBaseStyle = css`
     display: block;
     position: relative;
@@ -9,10 +11,15 @@ const IconButtonBaseStyle = css`
     width: min-content;
 `;
 
-export const IconButtonStyleDefault = styled.button`
+export const IconButtonStyleDefault = styled.button<IIconButton>`
     ${IconButtonBaseStyle};
     background-color: #F7FBFF;
     border: 1px solid #DAE9FA;
+
+    &:disabled {
+        background-color: #E7E7E7;
+        border: 1px solid #CCC;
+    }
 `;
 
 export const IconButtonStyleClean = styled.button`

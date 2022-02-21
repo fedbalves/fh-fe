@@ -7,7 +7,8 @@ import {
   GUEST_PICKER_REMOVE_ROOM,
   GUEST_PICKER_REMOVE_OCCUPANT,
   GUEST_PICKER_SET_OCCUPANT_AGE,
-  GUEST_PICKER_SUBMIT,
+  GUEST_PICKER_RECOVER,
+  GUEST_PICKER_CLEAR,
 } from './types';
 
 export const GuestPickerReducer = (state = defaultProps, { type, payload }) => {
@@ -118,9 +119,46 @@ export const GuestPickerReducer = (state = defaultProps, { type, payload }) => {
       };
     }
 
-    case GUEST_PICKER_SUBMIT: {
-      alert(JSON.stringify(state));
-      return state;
+    case GUEST_PICKER_RECOVER: {
+      const newState = state;
+
+      const rooms = payload.split('|');
+      
+      rooms.forEach((room) => {
+        const ID = createID();
+        const [adults, childrens] = room.split(':');
+
+        let children = [];
+        if (childrens) {
+          const childrenAges = childrens.split(',');
+
+          childrenAges.forEach((child) => {
+            const childrenID = createID();
+            children.push({
+              id: childrenID,
+              age: Number(child),
+            });
+          });
+        }
+
+        newState.items[ID] = {
+          id: ID,
+          adults: Number(adults),
+          children,
+        }
+      });
+
+      return {
+        ...newState,
+        update: Date.now(),
+      };
+    }
+
+    case GUEST_PICKER_CLEAR: {
+      return {
+        items: {},
+        update: Date.now(), 
+      }
     }
 
     default: return state;
